@@ -1,5 +1,8 @@
 # French Java Compiler (Compilateur Java en Français)
 
+![alt text](https://raw.githubusercontent.com/CelhrynOfficial/French_Java_Compiler/e079f26a191a58d59e0b6ff4b6e28d66a7d3e653/french_java.png)
+
+
 ## Project Overview
 
 This project aims to create a **Java compiler entirely in French**. Originally started as a joke proposed by a friend, it has since evolved into a more serious and ambitious endeavor. The goal is to provide a compiler that allows developers to write and compile Java code using **French keywords** and syntax.
