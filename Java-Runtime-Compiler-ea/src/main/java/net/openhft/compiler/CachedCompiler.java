@@ -57,6 +57,9 @@ public class CachedCompiler implements Closeable {
 
     private final ConcurrentMap<String, JavaFileObject> javaFileObjects = new ConcurrentHashMap<>();
 
+    // Ajout du FrenchPreprocesseur
+    private final FrenchPreprocesseur frenchProcesseur = new FrenchPreprocesseur();
+
     public CachedCompiler(@Nullable File sourceDir, @Nullable File classDir) {
         this(sourceDir, classDir, DEFAULT_OPTIONS);
     }
@@ -97,11 +100,16 @@ public class CachedCompiler implements Closeable {
                                         @NotNull String javaCode,
                                         final @NotNull PrintWriter writer,
                                         MyJavaFileManager fileManager) {
+
+
+        // Traduction du code français en code anglais avant la compilation
+        String codeTraduit = frenchProcesseur.traduire(javaCode);
+
         Iterable<? extends JavaFileObject> compilationUnits;
         if (sourceDir != null) {
             String filename = className.replaceAll("\\.", '\\' + File.separator) + ".java";
             File file = new File(sourceDir, filename);
-            writeText(file, javaCode);
+            writeText(file, codeTraduit);
             if (s_standardJavaFileManager == null)
                 s_standardJavaFileManager = s_compiler.getStandardFileManager(null, null, null);
             compilationUnits = s_standardJavaFileManager.getJavaFileObjects(file);
