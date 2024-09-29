@@ -37,33 +37,35 @@ public class FrenchPreprocesseur {
 
     }
 
-    public String traduire(String codeFrancais){
-        String[] tokens = codeFrancais.split("\\s+");
-        StringBuilder codeAnglais = new StringBuilder();
+    // Méthode pour traduire un fichier .java
+    public void traduireFichier(File fichierEntree, File fichierSortie) throws IOException {
+        String contenu = new String(Files.readAllBytes(fichierEntree.toPath()));
+        String contenuTraduit = traduire(contenu);
+        Files.write(fichierSortie.toPath(), contenuTraduit.getBytes());
+    }
 
-        for (String token : tokens){
-            String motTraduit = dictionnaire.getOrDefault(token, token); // On garde le mot original si non-traduit
-            codeAnglais.append(motTraduit).append(" ");
+    // Méthode qui traduit le contenu d'un fichier ou d'une chaîne de caractères
+    public String traduire(String contenu) {
+        for (Map.Entry<String, String> entry : traductions.entrySet()) {
+            String motFrancais = entry.getKey();
+            String motAnglais = entry.getValue();
+            contenu = contenu.replaceAll("\\b" + motFrancais + "\\b", motAnglais);
         }
-
-        return codeAnglais.toString().trim();
-
+        return contenu;
     }
 
+    // Exemple d'utilisation
     public static void main(String[] args) {
-        FrenchPreprocessor preprocesseur = new FrenchPreprocessor();
+        FrenchPreprocesseur preprocesseur = new FrenchPreprocesseur();
+        File fichierEntree = new File("chemin/vers/votre/fichier.java");
+        File fichierSortie = new File("chemin/vers/fichier_traduit.java");
 
-        // Exemple de code en Français 
-        String codeFrancais = "publique classe Exemple {publique rien methode() {si (vrai) {retourner; } sinon {retourner ; } } }";
-
-        // Traduction du code 
-        String codeAnglais = preprocesseur.traduction(codeFrancais);
-        
-        // Affichage du code traduit
-        System.out.println("Code en anglais : ");
-        System.out.println(codeAnglais);
-
+        try {
+            preprocesseur.traduireFichier(fichierEntree, fichierSortie);
+            System.out.println("Fichier traduit avec succès !");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
 
 }
